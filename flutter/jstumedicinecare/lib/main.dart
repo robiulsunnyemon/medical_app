@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:jstumedicinecare/presentation/component/medicine_card.dart';
 import 'package:jstumedicinecare/presentation/home_page.dart';
 import 'package:provider/provider.dart';
 

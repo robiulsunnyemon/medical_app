@@ -11,7 +11,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include(router.urls)),
     path('api/bulk_medicine/', BulkMedicineSerializer.as_view(), name='bulk-medicine-questions'),
-    path('api/medicine/<str:name>/', medicine_by_name, name='medicine_by_name'),
+    path('api/medicine_n/<str:name>/', medicine_by_name, name='medicine_by_name'),
     path('api/medicine_d/<str:description>/', medicine_by_description, name='medicine_by_description'),
     path('api/medicine_m/<str:manufacturer>/', medicine_by_manufacturer, name='medicine_by_manufacturer'),
 

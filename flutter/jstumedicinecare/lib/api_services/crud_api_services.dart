@@ -10,9 +10,9 @@ class CrudMedicineProvider with ChangeNotifier {
   List<Medicine> _medicineList = [];
   List<Medicine> get medicineList => _medicineList;
 
-  static String baseUrl = 'http://192.168.0.106:8000/api/medicines/';
+  String baseUrl = 'http://192.168.0.106:8000/api/medicines/';
 
-  Future<void> getMedicine() async {
+  Future<void> getMedicine({required String baseUrl}) async {
     try {
       final response = await http.get(Uri.parse(baseUrl));
 
