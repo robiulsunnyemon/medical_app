@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../api_services/crud_api_services.dart';
 
 class MedicineDetailsContainer extends StatelessWidget {
   final String name;
@@ -6,7 +9,8 @@ class MedicineDetailsContainer extends StatelessWidget {
   final String price;
   final int stock;
   final String description;
-  const MedicineDetailsContainer({super.key, required this.name, required this.manufacturer, required this.price, required this.stock, required this.description});
+  final int medicineId;
+  const MedicineDetailsContainer({super.key, required this.name, required this.manufacturer, required this.price, required this.stock, required this.description, required this.medicineId});
 
   @override
   Widget build(BuildContext context) {
@@ -73,6 +77,7 @@ class MedicineDetailsContainer extends StatelessWidget {
                     color: Colors.grey[700],
                   ),
                 ),
+                SizedBox(height: 8),
               ],
             ),
           )

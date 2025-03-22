@@ -7,13 +7,15 @@ class MedicineCard extends StatelessWidget {
   final String price;
   final int stock;
   final String description;
+  final int medicineId;
   const MedicineCard(
       {super.key,
       required this.name,
       required this.manufacturer,
       required this.price,
       required this.stock,
-      required this.description});
+      required this.description,
+      required this.medicineId});
 
   @override
   Widget build(BuildContext context) {
@@ -94,10 +96,18 @@ class MedicineCard extends StatelessWidget {
                       TextButton(
                         onPressed: () {
                           Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => MedicineDetailsPage(name: name, manufacturer: manufacturer, price: price, stock: stock, description: description)
-                              ));
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => MedicineDetailsPage(
+                                name: name,
+                                manufacturer: manufacturer,
+                                price: price,
+                                stock: stock,
+                                description: description,
+                                medicineId: medicineId,
+                              ),
+                            ),
+                          );
                         },
                         child: Text(
                           ">>>>",

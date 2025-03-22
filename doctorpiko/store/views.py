@@ -1,15 +1,28 @@
 from rest_framework import viewsets, status
 from rest_framework.response import Response
-from .models import Medicine
+from .models import Medicine,MedicineReview
 from rest_framework.views import APIView
+from django.contrib.auth.models import User
 from rest_framework.decorators import api_view
 
-from .serializers import MedicineSerializer
+from .serializers import MedicineSerializer,UserSerializer,MedicineReviewSerializer
 
 class MedicineViewSet(viewsets.ModelViewSet):
     queryset = Medicine.objects.all()
     serializer_class = MedicineSerializer
 
+
+
+class MedicineReviewViewSet(viewsets.ModelViewSet):
+    queryset = MedicineReview.objects.all()
+    serializer_class = MedicineReviewSerializer
+
+
+class UserListView(APIView):
+    def get(self, request):
+        users = User.objects.all()  # সমস্ত ইউজার সংগ্রহ করা
+        serializer = UserSerializer(users, many=True)  # Serializer দিয়ে JSON ফরম্যাটে রূপান্তর
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class BulkMedicineSerializer(APIView):
@@ -22,12 +35,18 @@ class BulkMedicineSerializer(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-# @api_view(['GET'])
-# def medicine_by_name(request, name):
-#     name = Medicine.objects.filter(name__icontains=name)  
-#     serializer = MedicineSerializer(name, many=True)
-#     return Response(serializer.data)
+
+
+class BulkMedicineReviewSerializer(APIView):
+    def post(self, request):
+        serializer = MedicineReviewSerializer(data=request.data, many=True)
+        if serializer.is_valid():
+            review = [MedicineReview(**data) for data in serializer.validated_data]
+            MedicineReview.objects.bulk_create(review)
+            return Response({"message": "Medicine created successfully!"}, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
+
 
 @api_view(['GET'])
 def medicine_by_name(request, name):
@@ -39,6 +58,8 @@ def medicine_by_name(request, name):
     
     serializer = MedicineSerializer(medicines, many=True)
     return Response(serializer.data)    
+
+
 
 
 @api_view(['GET'])
@@ -65,3 +86,37 @@ def medicine_by_manufacturer(request, manufacturer):
     # ফিল্টার করা ডাটা সিরিয়ালাইজ করা
     serializer = MedicineSerializer(medicines, many=True)
     return Response(serializer.data)
+
+
+# ## review by medicine
+
+@api_view(['GET'])
+def filter_reviews_by_medicine(request):
+    # Get the 'medicine' parameter from the query string
+    medicine_id = request.query_params.get('medicine', None)
+
+    if medicine_id is not None:
+        # Filter reviews by the medicine id
+        reviews = MedicineReview.objects.filter(medicine_id=medicine_id)
+
+        # Serialize the data
+        serializer = MedicineReviewSerializer(reviews, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    else:
+        # If medicine parameter is not provided, return all reviews
+        reviews = MedicineReview.objects.all()
+        serializer = MedicineReviewSerializer(reviews, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+
+
+
+
+class UserDetailView(APIView):
+    def get(self, request, pk):
+        try:
+            user = User.objects.get(pk=pk)  # ইউজার আইডি দিয়ে ইউজার খোঁজা
+            serializer = UserSerializer(user)  # সিরিয়ালাইজার দিয়ে ইউজারের ডিটেইলস পাওয়া
+            return Response(serializer.data, status=status.HTTP_200_OK)  # ইউজারের ডিটেইলস রিটার্ন করা
+        except User.DoesNotExist:
+            return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)

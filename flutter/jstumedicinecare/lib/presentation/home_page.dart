@@ -16,7 +16,6 @@ class HomePage extends StatelessWidget {
       ),
       body: Consumer<CrudMedicineProvider>(
         builder: (context, provider, child) {
-
           if (provider.medicineList.isEmpty) {
             provider.getMedicine(baseUrl: "http://192.168.0.106:8000/api/medicines/"); // Load data when list is empty
             return Center(child: CircularProgressIndicator());
@@ -38,6 +37,7 @@ class HomePage extends StatelessWidget {
                           description: provider.medicineList[index].description,
                           price: provider.medicineList[index].price,
                           stock: provider.medicineList[index].stock,
+                          medicineId: provider.medicineList[index].id,
                           manufacturer:
                               provider.medicineList[index].manufacturer,
                         ),

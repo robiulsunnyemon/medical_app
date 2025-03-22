@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from .models import Medicine
+from .models import Medicine,MedicineReview
+from django.contrib.auth.models import User
 
 
 class MedicineSerializer(serializers.ModelSerializer):
@@ -7,12 +8,17 @@ class MedicineSerializer(serializers.ModelSerializer):
         model = Medicine
         fields = '__all__'
 
-# class BulkMedicineSerializer(serializers.ListSerializer):
-#     child = MedicineSerializer()
-
-#     def create(self, validated_data):
-#         medicines = [Medicine(**item) for item in validated_data]
-#         return Medicine.objects.bulk_create(medicines)
 
 
 
+class MedicineReviewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MedicineReview
+        fields = '__all__'
+
+
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'email', 'first_name', 'last_name', 'is_active', 'date_joined']
